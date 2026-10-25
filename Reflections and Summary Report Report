@@ -1,0 +1,144 @@
+CS 320 Project Two: Summary and Reflections Report
+
+1. Summary
+
+Unit Testing Approach for Each Feature
+For Project One, I developed JUnit tests for the contact, task, and appointment services. My main
+approach was to test each service against its requirements and verify that it handled both valid
+and invalid inputs correctly. I used positive testing, negative testing, boundary-value analysis,
+and equivalence partitioning to check object creation, input validation, and service operations.
+These techniques helped me identify potential problems before the services could be used in a
+larger application. Boundary-value analysis focuses on testing values at the limits of an allowed
+range, while equivalence partitioning groups inputs that are expected to behave similarly
+(International Software Testing Qualifications Board [ISTQB], n.d.).
+For the contact service, I tested the requirements for contact IDs, names, phone numbers, and
+addresses. I checked that required fields were not null and that values did not exceed their
+permitted lengths. For example, I tested whether a contact ID with the maximum allowed length
+was accepted and whether an ID that exceeded the limit was rejected. I also tested invalid inputs
+to confirm that the service prevented incorrect contact information from being stored.
+For the task service, I focused on the requirements for task IDs, names, and descriptions. I tested
+whether valid task information could be created and whether invalid values were rejected. I also
+checked the restrictions on field lengths and required information. For the appointment service, I
+tested appointment creation, deletion, and validation. I checked that appointment information
+met the requirements, including the restriction that appointment IDs could not exceed 10
+characters and that appointment dates could not be in the past. My testing approach aligned with
+the software requirements because I used the requirements to determine what each test needed to
+
+Trevor Powell
+CS 320 Project Two: Summary and Reflections Report
+verify. I did not only test whether the services worked under normal conditions. I also tested
+situations in which the services were expected to reject data. This was important because
+accepting invalid information could cause problems later in the application.
+Quality and Effectiveness of JUnit Tests
+My contact, task, and appointment services each achieved 100% code coverage. This result
+indicates that all executable code measured by my coverage tool was exercised during testing. It
+gave me confidence that my tests reached the service methods and validation logic included in
+the coverage measurement. However, 100% code coverage does not automatically guarantee that
+the software is free of defects. A test can execute a line of code without fully verifying that the
+result is correct. For this reason, I also used assertions to check expected outcomes and exception
+testing to confirm that invalid inputs were rejected. JUnit provides assertion methods that help
+developers compare actual behavior with expected results (JUnit Team, n.d.). Combining
+complete code coverage with requirement-based assertions and negative tests gave me a stronger
+way to evaluate the quality of my work. I would also review branch coverage separately if it
+were available, since 100% code coverage alone does not establish that every possible decision
+outcome was tested.
+Experience Writing the JUnit Tests
+I made sure my tests were technically sound by checking that the expected behavior matched the
+requirements. For example, the following test checks that an invalid contact ID causes an
+exception:
+@Test
+
+void testContactIdTooLongThrowsException() {
+Assertions.assertThrows(IllegalArgumentException.class, () -&gt; {
+new Contact(&quot;12345678901&quot;, &quot;John&quot;, &quot;Doe&quot;,
+&quot;1234567890&quot;, &quot;123 Main St&quot;);
+});
+}
+This test uses assertThrows() to verify that the constructor rejects an ID that exceeds the 10-
+character limit. It is important that the test checks for the expected exception rather than simply
+assuming the invalid input will fail. This helps confirm that the application responds to invalid
+information as required. I also worked to make my tests efficient and easy to maintain by
+separating test cases and using setup methods where appropriate. For example, a @BeforeEach
+method can create a fresh service instance before each test. This reduces repeated setup code and
+helps prevent one test from affecting another. Keeping tests focused on individual behaviors also
+makes it easier to identify the cause of a failure. Together, these practices made my test suite
+easier to understand and maintain.
+
+2. Reflection
+
+Testing Techniques
+The main testing techniques I used were unit testing, positive testing, negative testing, boundary-
+value analysis, and equivalence partitioning. Unit testing allowed me to test individual service
+methods and model objects separately. Positive testing checked that valid inputs produced the
+
+Trevor Powell
+CS 320 Project Two: Summary and Reflections Report
+expected results, while negative testing checked that invalid inputs were rejected. These
+techniques were useful for verifying the contact, task, and appointment requirements. Boundary-
+value analysis focuses on values at the edges of permitted ranges. For example, if a field allows a
+maximum of 10 characters, testing values of 10 and 11 characters helps determine whether the
+limit is enforced correctly. Equivalence partitioning groups inputs expected to behave similarly.
+For example, valid strings and strings that exceed a field&#39;s maximum length can be treated as
+separate groups. Instead of testing every possible value, I can select representative values from
+each group. These techniques are useful for applications that process forms, user accounts,
+financial information, or other data with specific validation rules (ISTQB, n.d.).
+There are other testing techniques I did not use extensively in this project. Integration testing
+checks whether separate components work correctly together. For example, it could verify that
+an appointment service communicates correctly with a database or another scheduling
+component. This is useful when individual components pass their unit tests but may still have
+problems when connected.
+System testing evaluates the complete application against its requirements. For a mobile
+application, this could involve creating a contact, scheduling an appointment, and confirming
+that the information is displayed correctly throughout the application. Acceptance testing goes a
+step further by checking whether the software meets the customer&#39;s needs. A customer or
+representative could use acceptance tests to determine whether the finished application supports
+the required tasks.
+Performance testing measures how well software behaves under different workloads, including
+response time and stability. For example, a scheduling system may need to handle thousands of
+
+Trevor Powell
+CS 320 Project Two: Summary and Reflections Report
+appointments without becoming too slow. Security testing looks for weaknesses that could allow
+unauthorized access or expose sensitive information. These techniques are particularly important
+for applications that manage healthcare, financial, or personal data. Although unit testing was
+appropriate for my project, integration, system, acceptance, performance, and security testing
+would provide additional assurance in a larger production environment.
+Testing Mindset: Caution, Bias, and Discipline
+I learned that caution is important because code that works under normal conditions may still fail
+when it receives unexpected input. For example, a contact service might create an object
+successfully but fail to reject a missing required field. An appointment service might also accept
+an invalid date if the validation logic is incomplete. Testing these situations helped me focus on
+what could go wrong rather than assuming that the code was correct because it worked in a basic
+test.bIt was also important to understand how the services could interact with other parts of an
+application. An invalid value accepted by one service could cause problems when another
+component uses that information. Even though my project focused on unit testing, I needed to
+consider how errors in individual methods could affect the overall application. This reinforced
+the importance of validating data and testing each requirement carefully.
+I also tried to limit bias by checking the code against the requirements instead of relying on my
+assumptions. Developers may naturally focus on successful outcomes because they expect their
+code to work. To reduce this bias, I tested invalid inputs, checked field restrictions, and used
+assertions to compare actual behavior with expected results. For example, testing both valid and
+invalid contact IDs helped me evaluate whether the validation worked correctly in both
+situations. In a professional environment, I would also welcome code reviews and independent
+
+Trevor Powell
+CS 320 Project Two: Summary and Reflections Report
+testing because another developer may notice problems that I overlooked. Discipline is important
+because cutting corners can create technical debt. Technical debt occurs when shortcuts or
+unresolved defects make future development more difficult. For example, failing to validate an
+appointment date could allow incorrect information into the system and require additional fixes
+later. Skipping tests might save time initially, but it could lead to more expensive problems when
+the application is updated or used by customers.
+To avoid unnecessary technical debt, I plan to review requirements before coding, write tests for
+valid and invalid inputs, and run my test suite after making changes. I will also maintain clear
+test names, use version control, review code coverage, and fix defects instead of leaving them
+unresolved. My 100% code coverage results are an important accomplishment, but I understand
+that maintaining quality requires more than reaching a percentage. As a software engineering
+professional, I need to remain careful, objective, and consistent so that my code is reliable,
+maintainable, and aligned with customer requirements.
+
+References
+
+ International Software Testing Qualifications Board. (n.d.). ISTQB glossary.
+https://glossary.istqb.org/
+ JUnit Team. (n.d.). JUnit 5 user guide. https://junit.org/junit5/docs/current/user-guide/
